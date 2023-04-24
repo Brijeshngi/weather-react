@@ -1,0 +1,552 @@
+further 
+
+//////////////////
+import { useState } from "react";
+import React from "react";
+import * as echarts from "echarts";
+import ReactEcharts from "echarts-for-react";
+import "./App.css";
+import axios from "axios";
+// import Main from "./components/Main";
+// import Navbar from "./components/Navbar";
+function App() {
+  const searchCity = (e) => {
+    setError("");
+    setLocation(e.target.value);
+  };
+
+  const [location, setLocation] = useState("");
+  const [error, setError] = useState("");
+  const [sunrise, setSunrise] = useState("");
+  const [sunset, setSunset] = useState("");
+  const [humidity, setHumidity] = useState("");
+  const [pressure, setPressure] = useState("");
+  const [temperature, setTemperature] = useState("");
+  const [text, setText] = useState("");
+  const [speed, setSpeed] = useState("");
+  const [forcast, setForcasts] = useState([]);
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
+  const [region, setRegion] = useState("");
+
+  const handleSubmit = () => {
+    const options = {
+      method: "GET",
+      url: "https://yahoo-weather5.p.rapidapi.com/weather",
+      params: { location: `${location}`, format: "json", u: "c" },
+      headers: {
+        "X-RapidAPI-Key": "52222829f0msh7161368b8ee4dbbp1cdc8cjsn8573b8b1b503",
+        "X-RapidAPI-Host": "yahoo-weather5.p.rapidapi.com",
+      },
+    };
+
+    axios
+      .request(options)
+      .then(function (response) {
+        if (response) {
+          console.log(response.data);
+          // console.log(response.data.current_observation.astronomy.sunrise);
+          setSunrise(response.data.current_observation.astronomy.sunrise);
+          // console.log(response.data.current_observation.astronomy.sunset);
+          setSunset(response.data.current_observation.astronomy.sunset);
+          // console.log(response.data.current_observation.atmosphere.humidity);
+          setHumidity(response.data.current_observation.atmosphere.humidity);
+          // console.log(response.data.current_observation.atmosphere.pressure);
+          setPressure(response.data.current_observation.atmosphere.pressure);
+          // console.log(response.data.current_observation.condition.temperature);
+          setTemperature(
+            response.data.current_observation.condition.temperature
+          );
+          console.log(response.data.current_observation.condition.text);
+          setText(response.data.current_observation.condition.text);
+          console.log(response.data.current_observation.wind.speed);
+          setSpeed(response.data.current_observation.wind.speed);
+          console.log(response.data.forecasts);
+          setForcasts(response.data.forecasts);
+          console.log(response.data.location.city);
+          setCity(response.data.location.city);
+          console.log(response.data.location.country);
+          setCountry(response.data.location.country);
+          console.log(response.data.location.region);
+          setRegion(response.data.location.region);
+        }
+      })
+      .catch(function (error) {
+        if (error.response.status == 500) {
+          setError("City Not Found!");
+        }
+
+        // console.error("erorrrrrrrrrrrrrrrrrrrrrrr",error.response.status);s
+      });
+  };
+
+  const forcast_high = forcast.map((data) => data.high);
+  console.log(forcast_high);
+  const forcast_low = forcast.map((data) => data.low);
+  console.log(forcast_low);
+  const forcast_day = forcast.map((data) => data.day);
+  console.log(forcast_day);
+  //
+  const option_speed = {
+    series: [
+      {
+        type: "gauge",
+        axisLine: {
+          lineStyle: {
+            width: 30,
+            color: [
+              [0.3, "#67e0e3"],
+              [0.7, "#37a2da"],
+              [1, "#fd666d"],
+            ],
+          },
+        },
+        pointer: {
+          itemStyle: {
+            color: "auto",
+          },
+        },
+        axisTick: {
+          distance: -30,
+          length: 8,
+          lineStyle: {
+            color: "#fff",
+            width: 2,
+          },
+        },
+        splitLine: {
+          distance: -30,
+          length: 30,
+          lineStyle: {
+            color: "#fff",
+            width: 4,
+          },
+        },
+        axisLabel: {
+          color: "auto",
+          distance: 30,
+          fontSize: 20,
+        },
+        detail: {
+          valueAnimation: true,
+          formatter: "{value} km/h",
+          fontSize: 15,
+          color: "auto",
+        },
+        data: [
+          {
+            value: `${speed}`,
+          },
+        ],
+      },
+    ],
+  };
+  //
+  const option_temperature = {
+    series: [
+      {
+        type: "gauge",
+        center: ["50%", "60%"],
+        startAngle: 200,
+        endAngle: -20,
+        min: 0,
+        max: 60,
+        splitNumber: 12,
+        itemStyle: {
+          color: "#FFAB91",
+        },
+        progress: {
+          show: true,
+          width: 30,
+        },
+        pointer: {
+          show: false,
+        },
+        axisLine: {
+          lineStyle: {
+            width: 30,
+          },
+        },
+        axisTick: {
+          distance: -45,
+          splitNumber: 5,
+          lineStyle: {
+            width: 2,
+            color: "#999",
+          },
+        },
+        splitLine: {
+          distance: -52,
+          length: 14,
+          lineStyle: {
+            width: 3,
+            color: "#999",
+          },
+        },
+        axisLabel: {
+          distance: -20,
+          color: "#999",
+          fontSize: 20,
+        },
+        anchor: {
+          show: false,
+        },
+        title: {
+          show: false,
+        },
+        detail: {
+          valueAnimation: true,
+          width: "60%",
+          lineHeight: 40,
+          borderRadius: 8,
+          offsetCenter: [0, "-15%"],
+          fontSize: 60,
+          fontWeight: "bolder",
+          formatter: "{value} °C",
+          color: "auto",
+        },
+        data: [
+          {
+            value: `${temperature}`,
+          },
+        ],
+      },
+    ],
+  };
+
+  //
+
+  const option_Pressure = {
+    series: [
+      {
+        type: "gauge",
+        min: 0,
+        max: 100,
+        splitNumber: 10,
+        radius: "60%",
+        axisLine: {
+          lineStyle: {
+            color: [[1, "#f00"]],
+            width: 3,
+          },
+        },
+        splitLine: {
+          distance: -18,
+          length: 18,
+          lineStyle: {
+            color: "#f00",
+          },
+        },
+        axisTick: {
+          distance: -12,
+          length: 10,
+          lineStyle: {
+            color: "#f00",
+          },
+        },
+        axisLabel: {
+          distance: -50,
+          color: "#f00",
+          fontSize: 25,
+        },
+        anchor: {
+          show: true,
+          size: 20,
+          itemStyle: {
+            borderColor: "#000",
+            borderWidth: 2,
+          },
+        },
+        pointer: {
+          offsetCenter: [0, "10%"],
+          icon: "path://M2090.36389,615.30999 L2090.36389,615.30999 C2091.48372,615.30999 2092.40383,616.194028 2092.44859,617.312956 L2096.90698,728.755929 C2097.05155,732.369577 2094.2393,735.416212 2090.62566,735.56078 C2090.53845,735.564269 2090.45117,735.566014 2090.36389,735.566014 L2090.36389,735.566014 C2086.74736,735.566014 2083.81557,732.63423 2083.81557,729.017692 C2083.81557,728.930412 2083.81732,728.84314 2083.82081,728.755929 L2088.2792,617.312956 C2088.32396,616.194028 2089.24407,615.30999 2090.36389,615.30999 Z",
+          length: "115%",
+          itemStyle: {
+            color: "#000",
+          },
+        },
+        detail: {
+          valueAnimation: true,
+          precision: (2).toFixed(2),
+        },
+        title: {
+          offsetCenter: [0, "-50%"],
+        },
+        data: [
+          {
+            value: `${pressure}` / 1013,
+            name: "Pressure(in atm)",
+          },
+        ],
+      },
+    ],
+  };
+  //
+  const option_humidity = {
+    tooltip: {
+      formatter: "{a} <br/>{b} : {c}%",
+    },
+    series: [
+      {
+        name: "Pressure",
+        type: "gauge",
+        progress: {
+          show: true,
+        },
+        detail: {
+          valueAnimation: true,
+          formatter: "{value}",
+        },
+        data: [
+          {
+            value: `${humidity}`,
+            name: "Humidity",
+          },
+        ],
+      },
+    ],
+  };
+  //
+
+  const option = {
+    color: ["#3398DB"],
+    tooltip: {
+      trigger: "axis",
+      axisPointer: {
+        type: "cross",
+      },
+      textStyle: {
+        fontWeight: "bold",
+      },
+    },
+    xAxis: {
+      name: "Day",
+      nameLocation: "center",
+      nameGap: 35,
+      type: "category",
+      data: forcast_day,
+    },
+    yAxis: {
+      name: "Temperature",
+      nameLocation: "center",
+      nameGap: 35,
+      type: "value",
+    },
+    series: [
+      {
+        name: "Highest Tempearture",
+        type: "line",
+        stack: "Total",
+        smooth: true,
+        lineStyle: {
+          width: 0,
+        },
+        showSymbol: false,
+        areaStyle: {
+          opacity: 0.8,
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            {
+              offset: 0,
+              color: "rgb(0, 221, 255)",
+            },
+            {
+              offset: 1,
+              color: "rgb(77, 119, 255)",
+            },
+          ]),
+        },
+        emphasis: {
+          focus: "series",
+        },
+        data: forcast_high,
+      },
+      {
+        name: "Lowest Tempearture",
+        type: "line",
+        stack: "Total",
+        smooth: true,
+        lineStyle: {
+          width: 0,
+        },
+        showSymbol: false,
+        areaStyle: {
+          opacity: 0.8,
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            {
+              offset: 0,
+              color: "rgb(55, 162, 255)",
+            },
+            {
+              offset: 1,
+              color: "rgb(116, 21, 219)",
+            },
+          ]),
+        },
+        emphasis: {
+          focus: "series",
+        },
+        data: forcast_low,
+      },
+    ],
+  };
+  //
+
+  return (
+    <React.Fragment>
+      {/* <Main/> */}
+      <input type="text" onChange={searchCity} />
+      <button onClick={handleSubmit}>search</button>
+      <span style={{ color: "red" }}>{error}</span>
+      {sunrise ? (
+        <>
+          
+
+          <div class="row1-container">
+            <div class="box box-down cyan">
+              <ReactEcharts option={option_temperature} />
+            </div>
+
+            <div class="box red">
+              <ReactEcharts option={option_humidity} />
+            </div>
+
+            <div class="box box-down blue">
+              <ReactEcharts option={option_Pressure} />
+            </div>
+          </div>
+          <div class="row2-container">
+            <div class="box orange">
+              <ReactEcharts option={option_speed} />
+            </div>
+          </div>
+
+          {forcast.map((data) => (
+            <div className="forcastData">
+              <ul>
+                <li>{data.day}</li>
+                <li>{data.high} C</li>
+                <li>{data.low} C</li>
+                <li>{data.text}</li>
+              </ul>
+            </div>
+          ))}
+        </>
+      ) : null}
+    </React.Fragment>
+  );
+}
+
+export default App;
+//////////////////
+.main {
+  width: 100%;
+  height: 100%;
+  background-color: darkslategrey;
+}
+.search {
+  display: flex;
+  justify-content: center;
+  background-color: darkslategrey;
+}
+input {
+  width: 50%;
+  height: 50px;
+  background-color: darkslategrey;
+  border-radius: 30px;
+  border: none;
+  margin-left: 300px;
+}
+input:focus {
+  border: none;
+}
+input[placeholder] {
+  height: 50px;
+  font-family: candara;
+  color: antiquewhite;
+}
+input[type] {
+  align-items: center;
+  text-decoration-color: antiquewhite;
+  font-size: large;
+  padding-left: 40px;
+  background: url("https://static.thenounproject.com/png/101791-200.png")
+    no-repeat left;
+  background-size: 40px;
+}
+.navbar {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  background-color: darkslategrey;
+}
+.navbar-start {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  justify-content: flex-start;
+}
+button {
+  background-color: darkslategrey;
+  color: antiquewhite;
+  font-family: Verdana, Tahoma, sans-serif;
+  padding: 20px;
+  border: none;
+  font-size: larger;
+}
+.navbar-end {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+
+@media (max-width: 450px) {
+  .box {
+    height: 200px;
+  }
+}
+
+@media (max-width: 950px) and (min-width: 450px) {
+  .box {
+    text-align: center;
+    height: 350px;
+  }
+}
+
+.row1-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.row2-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.box-down {
+  position: relative;
+  top: 150px;
+}
+.box {
+  width: 30%;
+}
+
+.card {
+  width: 30%;
+  border-radius: 10px;
+  margin-left: 530px;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.container {
+  padding: 2px 16px;
+}
