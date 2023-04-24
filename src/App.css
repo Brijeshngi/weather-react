@@ -1,38 +1,99 @@
-.App {
-  text-align: center;
+body{
+  background-image:url('https://images.unsplash.com/photo-1419833173245-f59e1b93f9ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80');
+  background-size: 1550px 1080px;
+  background-position: fixed;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.main {
+  width: 100%;
+  height: 100%;
+  background-color: darkslategrey;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.search {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  background-color: darkslategrey;
+}
+input {
+  width: 50%;
+  height: 70px;
+  background-color: darkslategrey;
+  border-radius: 30px;
+  border:5px white solid;
+  margin-left: 300px;
+
+}
+input:focus {
+  border:5px white solid;
+}
+::placeholder {
+  height: 70px;
+  font-family: candara;
+  color: antiquewhite;
+}
+input[type] {
+  align-items: center;
+  text-decoration-color: antiquewhite;
+  font-size: large;
+  padding-left: 40px;
+  background: url("https://static.thenounproject.com/png/101791-200.png")
+    no-repeat left;
+  background-size: 40px;
+  color: antiquewhite;
+}
+button {
+  background-color: darkslategrey;
+  color: antiquewhite;
+  font-family: Verdana, Tahoma, sans-serif;
+  padding: 17px;
+  height: 80px;
+  border:5px white solid;
+  font-size: larger;
+  border-radius: 30px;
 }
 
-.App-link {
-  color: #61dafb;
+.container{
+    display: flex;
+    justify-content: center;
+    margin-left:300px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size:40px;
+    width:60%;
+    border:5px solid rgb(231, 227, 227);
+    border-radius: 20px;
+    margin-top: 10px;
+}
+.container-city{
+    display: flex;
+    justify-content:center;
+    color: antiquewhite;
+}
+.container-details{
+    display: flex;
+    justify-content: center;
+    color: antiquewhite;
+
+}
+.details-first{
+    width:100%;
+    font-size:70%;
+    padding-left: 50px;
+    
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+ 
+  text-align: left;
+  padding: 8px;
+  color:black;
+}
+
+tr:nth-child(even) {
+  background-color: inherit;
+  
 }
